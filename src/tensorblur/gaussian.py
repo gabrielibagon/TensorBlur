@@ -9,32 +9,29 @@ from tensorblur.blur import Blur
 class GaussianBlur(Blur):
     """Gaussian Blurring of Images: https://en.wikipedia.org/wiki/Gaussian_blur"""
 
-    def create_kernel(self):
+    def create_kernel(self, size=1, path='coefficients.pkl'):
         """Create kernel to apply Gaussian blurring. Use cache if possible"""
-        path = 'coefficients.pkl'
+
+        coeff = None
+
         if os.path.isfile(path):
-            kernels = self.load_precomputed_kernels()
-            if self.size in kernels:
-                kernel = kernels[self.size]
-            else:
-                kernel = self.compute_kernel(self.size)
-        else:
-            kernel = self.compute_kernel(self.size)
-        return kernel
+            coeff = self.load_precomputed_coeff(size=size, path=path)
 
-    def load_precomputed_kernels(self, path='coefficients.pkl'):
-        """Load kernel from cached coeffiencets on disk"""
-        coeffs = pickle.load(open(path, 'rb'))
-        kernels = {}
-        for idx in range(len(coeffs)):
-            kernels[idx+1] = self.create_kernel_from_coeff(coeffs[idx])
-        return kernels
+        if coeff is None:
+            coeff = self.compute_coeff(size)
 
-    def compute_kernel(self, size: int):
-        """Compute a kernel to perform blurring of the specifed size"""
-        coeff = self.compute_coefs(size)
         kernel = self.create_kernel_from_coeff(coeff)
         return kernel
+
+    @staticmethod
+    def load_precomputed_coeff(size=1, path='coefficients.pkl'):
+        """Load kernel from cached coeffiencets on disk"""
+        coeffs = pickle.load(open(path, 'rb'))
+
+        if size in coeffs:
+            return coeffs[size]
+        else:
+            return None
 
     @staticmethod
     def create_kernel_from_coeff(coeff):
@@ -46,7 +43,7 @@ class GaussianBlur(Blur):
         return kernel
 
     @staticmethod
-    def compute_coefs(n):
+    def compute_coeff(n):
         """Compute gaussian coefficients given the size of a kernel"""
         coef = [utilities.binom_coef(n, k) for k in range(n)[::-1]]
         coef = tf.divide(coef, tf.reduce_sum(coef))
