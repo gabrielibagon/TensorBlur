@@ -12,7 +12,7 @@ for size in [2, 4, 8, 16, 32, 64]:
     # Make a fresh copy of the image
     img = init_img.copy()
 
-    # Create blur object
+    # Create apply object
     gauss = GaussianBlur(size=size)
 
     # Apply blurring
