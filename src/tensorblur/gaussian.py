@@ -23,23 +23,23 @@ class GaussianBlur(Blur):
         Returns:
             kernel of shape [filter_height, filter_width, in_channels, channel_multiplier]
         """
-        coeff = None
+        coef = None
 
         # Load cached kernel if possible
         if os.path.isfile(path):
-            coeff = self.load_precomputed_coeff(size=size, path=path)
+            coef = self.load_precomputed_coef(size=size, path=path)
 
         # If cache does not exist (or if empty file), compute coefficients
-        if coeff is None:
-            coeff = self.compute_coeff(size)
+        if coef is None:
+            coef = self.compute_coef(size)
 
         # format coefficients to square kernel
-        kernel = self.create_kernel_from_coeff(coeff)
+        kernel = self.create_kernel_from_coeff(coef)
 
         return kernel
 
     @staticmethod
-    def load_precomputed_coeff(size=1, path='coefficients.pkl'):
+    def load_precomputed_coef(size=1, path='coefficients.pkl'):
         """
         Load kernel from cached coeffients on disk
 
@@ -50,31 +50,31 @@ class GaussianBlur(Blur):
         Returns:
             coefficients of a particular kernel size
         """
-        coeffs = pickle.load(open(path, 'rb'))
+        coefs = pickle.load(open(path, 'rb'))
 
-        if size in coeffs:
-            return coeffs[size]
+        if size in coefs:
+            return coefs[size]
         else:
             return None
 
     @staticmethod
-    def create_kernel_from_coeff(coeff):
+    def create_kernel_from_coeff(coef):
         """
         Generate a gaussian kernel from a list of coefficients
         Args:
-            coeff: list of coefficients of a particular kernel size
+            coef: list of coefficients of a particular kernel size
 
         Returns:
             kernel of shape [filter_height, filter_width, in_channels, channel_multiplier]
         """
-        coeff = tf.cast(coeff, tf.float32)
-        kernel = tf.einsum('i,j->ij', coeff, coeff)
+        coef = tf.cast(coef, tf.float32)
+        kernel = tf.einsum('i,j->ij', coef, coef)
         kernel = kernel[:, :, tf.newaxis, tf.newaxis]
         kernel = tf.tile(kernel, [1, 1, 3, 1])
         return kernel
 
     @staticmethod
-    def compute_coeff(size):
+    def compute_coef(size):
         """
         Compute Gaussian coefficients given the size of a kernel. Uses binomial approach.
         

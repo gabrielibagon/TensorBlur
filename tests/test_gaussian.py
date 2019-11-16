@@ -20,16 +20,16 @@ def test_create_kernel():
 
 def test_load_precomputed_coeff():
     path = '../src/tensorblur/coefficients.pkl'
-    assert GaussianBlur.load_precomputed_coeff(size=-1, path=path) is None
+    assert GaussianBlur.load_precomputed_coef(size=-1, path=path) is None
 
     with pytest.raises(FileNotFoundError):
-        GaussianBlur.load_precomputed_coeff(size=1, path='')
+        GaussianBlur.load_precomputed_coef(size=1, path='')
 
 
 def test_compute_coeff():
     gauss = GaussianBlur()
     size = 2
-    kernel = gauss.compute_coeff(size).numpy()
+    kernel = gauss.compute_coef(size).numpy()
     target = np.array([0.6666667, 0.33333334])
     np.testing.assert_almost_equal(kernel, target)
 
@@ -48,11 +48,11 @@ def test_create_kernel_from_coeff():
 
 def test_compute_coeffs():
     n = 1
-    coef = GaussianBlur.compute_coeff(n).numpy()
+    coef = GaussianBlur.compute_coef(n).numpy()
     assert coef == np.array([1])
 
     n = 2
-    coef = GaussianBlur.compute_coeff(n).numpy()
+    coef = GaussianBlur.compute_coef(n).numpy()
     target = np.array([0.6666667, 0.33333334])
     np.testing.assert_array_almost_equal(coef, target)
 
