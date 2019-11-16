@@ -4,17 +4,15 @@ import tensorflow as tf
 
 from tensorblur.blur import Blur
 
-__author__ = "gabrielibagon"
-__copyright__ = "gabrielibagon"
-__license__ = "mit"
-
 
 def test_create_kernel():
+    """Test NotImplementedError in create_kernel"""
     with pytest.raises(NotImplementedError):
-        Blur.create_kernel(Blur())
+        Blur.create_kernel(Blur(), None)
 
 
 def test_format_input():
+    """Test formatting inputs to the appropriate shape"""
     shape = (1,)
     img = np.random.random(shape)
     with pytest.raises(ValueError):
