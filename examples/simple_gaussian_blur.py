@@ -7,7 +7,7 @@ from tensorblur.gaussian import GaussianBlur
 init_img = np.array(Image.open("assets/example2.jpg"))
 
 # Iterate over different blur sizes
-for size in [2, 4, 8, 16, 32, 64]:
+for size in [1, 5, 9, 17, 33, 65]:
 
     # Make a fresh copy of the image
     img = init_img.copy()
@@ -24,4 +24,3 @@ for size in [2, 4, 8, 16, 32, 64]:
     plt.imshow(result)
     plt.axis('off')
     plt.show()
-
