@@ -34,7 +34,7 @@ class GaussianBlur(Blur):
             coef = self.compute_coef(size)
 
         # format coefficients to square kernel
-        kernel = self.create_kernel_from_coeff(coef)
+        kernel = self.create_kernel_from_coef(coef)
 
         return kernel
 
@@ -58,7 +58,7 @@ class GaussianBlur(Blur):
             return None
 
     @staticmethod
-    def create_kernel_from_coeff(coef):
+    def create_kernel_from_coef(coef):
         """
         Generate a gaussian kernel from a list of coefficients
         Args:
