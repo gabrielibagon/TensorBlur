@@ -1,23 +1,35 @@
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from tensorblur.layer import BlurLayer
 
 # Load an image
-init_img = np.array(Image.open("assets/example2.jpg"))
+img = np.array(Image.open("assets/example2.jpg"))
 
-img2 = np.array(Image.open("assets/example1.png"))
+# Create Model with blur layer
+blur_amt = 13
 
-size = 16
-# Make a fresh copy of the image
-img = init_img.copy()
-
-# Create apply object
 inputs = tf.keras.layers.Input(shape=(128, 128, 3))
-outputs = BlurLayer(min_amt=4, max_amt=4)(inputs)
+outputs = BlurLayer(min_amt=blur_amt, max_amt=blur_amt)(inputs)
 model = tf.keras.Model(inputs=inputs, outputs=outputs)
+
 model.summary()
 
-img = tf.convert_to_tensor([img, img], tf.float32)
-model(img)
+# Prepare input
+img = [img]                                     # add batch dimension
+img = tf.convert_to_tensor(img, tf.float32)     # convert to tensor
+
+# Apply model (call `model()`)
+result = model(img)
+
+# Format output
+result = result.numpy()         # convert to numpy array
+result = result[0]              # remove batch dimension
+result = result.astype(int)     # convert to int (for display)
+
+# Display output image
+plt.title('Gaussian Blur | Size: %i' % blur_amt)
+plt.imshow(result)
+plt.axis('off')
+plt.show()

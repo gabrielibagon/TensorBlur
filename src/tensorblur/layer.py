@@ -12,9 +12,16 @@ class BlurLayer(tf.keras.layers.Layer):
         super(BlurLayer, self).__init__()
         self.min_amt = min_amt
         self.max_amt = max_amt
-        self.kernels = self.precompute_kernels(self.min_amt, self.max_amt)
+        self.kernel_bank = self.precompute_kernels(self.min_amt, self.max_amt)[0]
 
     def compute_output_shape(self, input_shape):
+        """
+        Compute the output shape of the tensor. Format: NHWC
+
+        TODO: hardcoded output shape
+        :param input_shape:
+        :return:
+        """
         return None, 224, 224, 3
 
     def build(self, input_shape):
@@ -32,7 +39,7 @@ class BlurLayer(tf.keras.layers.Layer):
         return coeffs
 
     def precompute_kernels(self, min_amt=1, max_amt=32):
-        path = 'coefficients.pkl'
+        path = 'test_coefficients.pkl'
 
         if os.path.isfile(path):
             coeffs = pickle.load(open(path, 'rb'))
@@ -41,13 +48,18 @@ class BlurLayer(tf.keras.layers.Layer):
         kernels = []
         for size in range(min_amt, max_amt+1):
             kernel = self.create_kernel_from_coeff(coeff=coeffs[size])
-            kernel = utilities.pad_to_width(kernel, width=self.max_amt)
+            # kernel = utilities.pad_to_width(kernel, width=self.max_amt)
             kernels.append(kernel)
         return kernels
 
     @staticmethod
     def create_kernel_from_coeff(coeff):
-        """Generate a gaussian kernel from a list of coefficients"""
+        """
+        Generate a gaussian kernel from a list of coefficients
+        Kernel must be of shape:
+        [filter_height, filter_width, in_channels, channel_multiplier]
+
+        """
         coeff = tf.cast(coeff, tf.float32)
         kernel = tf.einsum('i,j->ij', coeff, coeff)
         kernel = kernel[:, :, tf.newaxis, tf.newaxis]
@@ -93,16 +105,34 @@ class BlurLayer(tf.keras.layers.Layer):
         angles = tf.random_uniform(shape=(batch_size,), minval=0, maxval=91, dtype=tf.int32)
         return angles
 
+    @staticmethod
+    def format_input(img):
+        if len(tf.shape(img)) != 3 and len(tf.shape(img)) != 4:
+            num_dims = len(tf.shape(img))
+            img_shape = tf.shape(img).numpy()
+            raise ValueError('Input image must have shape '
+                             '[ batch height width channels ] or [ height width channels ]. '
+                             f'Current input has {num_dims} dimensions: {img_shape}')
+        elif len(tf.shape(img)) == 3:
+            img = tf.expand_dims(img, 0)
+
+        img = tf.cast(img, tf.float32)
+        return img
+
+    @staticmethod
+    def format_output(img, img_dim):
+        img = tf.reshape(img, img_dim)
+        return img
+
     def call(self, inputs, **kwargs):
-        if len(self.kernels) > 1:
-            pass
-            kernel = self.kernels
+        if len(self.kernel_bank) > 1:
+            kernel = self.kernel_bank
         else:
-            kernel = self.kernels
+            kernel = self.kernel_bank[0]
 
-        inputs = tf.nn.depthwise_conv2d(inputs, kernel, strides=[1, 1, 1, 1], padding="SAME")
+        outputs = tf.nn.depthwise_conv2d(inputs, kernel, strides=[1, 1, 1, 1], padding="SAME")
 
-        return inputs
+        return outputs
         # x, amt = inputs[0], inputs[1] #check for inputs etc
         # x = inputs
         # batch_size = tf.shape(x)[0]
