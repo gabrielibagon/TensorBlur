@@ -1,9 +1,8 @@
 <p align="center">
-  <img src="assets/tensorblur.png?raw=true" alt="TensorBlur"/>
+  <img src="assets/tensorblur.png?raw=true" alt="TensorBlur" width=50%;/>
 </p>
-============================================================
+
 # TensorBlur: Efficient Image Blurring Routines in TensorFlow
-============================================================
 
 # Contents
 1. [Description](#Description)
