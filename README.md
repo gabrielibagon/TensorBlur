@@ -49,14 +49,15 @@ inputs = tf.keras.layers.Input(shape=(128, 128, 3))
 outputs = BlurLayer(min_amt=13, max_amt=13)(inputs)
 model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
-img = tf.convert_to_tensor([img], tf.float32)     # convert to tensor
+# convert input to tensor
+img = tf.convert_to_tensor([img], tf.float32)     
 
 # Apply model (call `model()`)
 result = model(img)
 ```
 
 
-Credit to:
+## Sources
 https://stackoverflow.com/questions/52012657/how-to-make-a-2d-gaussian-filter-in-tensorflow
 
 https://computergraphics.stackexchange.com/questions/39/how-is-gaussian-blur-implemented
