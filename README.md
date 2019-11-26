@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/tensorblur.png?raw=true" alt="TensorBlur"/>
+</p>
 ============================================================
 # TensorBlur: Efficient Image Blurring Routines in TensorFlow
 ============================================================
@@ -52,7 +55,6 @@ img = tf.convert_to_tensor([img], tf.float32)     # convert to tensor
 # Apply model (call `model()`)
 result = model(img)
 ```
-
 
 
 Credit to:
