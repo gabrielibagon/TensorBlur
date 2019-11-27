@@ -4,6 +4,10 @@
 
 # TensorBlur: Efficient Image Blurring Routines in TensorFlow
 
+<p align="center">
+  <img src="assets/example_cat.png?raw=true" alt="Example Cat"/>
+</p>
+
 # Contents
 1. [Description](#Description)
 2. [Quickstart](#Quickstart)
