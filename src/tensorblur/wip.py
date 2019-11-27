@@ -10,7 +10,7 @@ from tensorblur.blur import Blur
 
 class RandomBlur(GaussianBlur):
     def __init__(self, path=''):
-        path = '/home/gabe/TensorBlur/src/tensorblur/coefficients.pkl'
+        path = '/home/gabe/TensorBlur/src/tensorblur/test_coefficients.pkl'
         self.coefs = self.load_precomputed_kernel(path)
 
     def select_random_kernels(self, batch_size):
