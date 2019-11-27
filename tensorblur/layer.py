@@ -1,8 +1,6 @@
 import os
-import tensorflow as tf
-import numpy as np
-import math
 import pickle
+import tensorflow as tf
 
 from tensorblur import utilities
 

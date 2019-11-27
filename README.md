@@ -39,7 +39,7 @@ Create a blur layer in a neural network
 import numpy as np
 from PIL import Image
 import tensorflow as tf
-from tensorblur.layer import BlurLayer
+from tensorblur import BlurLayer
 
 # Load an image
 img = np.array(Image.open("assets/example2.jpg"))

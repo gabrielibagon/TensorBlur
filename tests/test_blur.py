@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import tensorflow as tf
 
-from tensorblur.blur import Blur
+from tensorblur import Blur
 
 
 def test_create_kernel():

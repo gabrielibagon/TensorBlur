@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from tensorblur.layer import BlurLayer
+from tensorblur import BlurLayer
 
 # Load an image
 img = np.array(Image.open("assets/example2.jpg"))
