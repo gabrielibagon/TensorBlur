@@ -4,9 +4,6 @@
 
 # TensorBlur: Efficient Image Blurring Routines in TensorFlow
 
-<p align="center">
-  <img src="assets/example_cat.png?raw=true" alt="Example Cat"/>
-</p>
 
 # Contents
 1. [Description](#Description)
@@ -14,6 +11,9 @@
 3. [Sources](#Sources)
 
 ## Description
+<p align="center">
+  <img src="assets/example_cat.png?raw=true" alt="Example Cat"/>
+</p>
 This package provides methods for efficient image blurring using TensorFlow. 
 
 These methods can be readily used in two ways:
