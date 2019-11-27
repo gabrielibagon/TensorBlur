@@ -11,9 +11,6 @@
 3. [Sources](#Sources)
 
 ## Description
-<p align="center">
-  <img src="assets/example_cat.png?raw=true" alt="Example Cat"/>
-</p>
 This package provides methods for efficient image blurring using TensorFlow. 
 
 These methods can be readily used in two ways:
@@ -22,6 +19,10 @@ These methods can be readily used in two ways:
 2) A standalone processing function
 
 TensorBlur takes advantage of several convolutional tricks and GPU acceleration to make these methods extremely efficient.
+
+<p align="center">
+  <img src="assets/example_cat.png?raw=true" alt="Example Cat"/>
+</p>
 
 ## Quick Start
 Apply blurring to a single image:
