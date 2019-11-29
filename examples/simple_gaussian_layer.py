@@ -2,16 +2,16 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from tensorblur import BlurLayer
+from tensorblur.layer import BlurLayer
 
 # Load an image
-img = np.array(Image.open("assets/example2.jpg"))
+img = np.array(Image.open("assets/example1.jpg"))
 
 # Create Model with blur layer
-blur_amt = 13
+blur_amt = 50
 
-inputs = tf.keras.layers.Input(shape=(128, 128, 3))
-outputs = BlurLayer(min_amt=blur_amt, max_amt=blur_amt)(inputs)
+inputs = tf.keras.layers.Input(shape=img.shape)
+outputs = BlurLayer(size=blur_amt)(inputs)
 model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
 model.summary()

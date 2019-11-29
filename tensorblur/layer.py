@@ -6,11 +6,16 @@ from tensorblur import utilities
 
 
 class BlurLayer(tf.keras.layers.Layer):
-    def __init__(self, size=None, min_amt=1, max_amt=32):
+    def __init__(self, size=None, min_size=1, max_size=32):
         super(BlurLayer, self).__init__()
-        self.min_amt = min_amt
-        self.max_amt = max_amt
-        self.kernel_bank = self.precompute_kernels(self.min_amt, self.max_amt)[0]
+
+        if size:
+            self.min_size = size
+            self.max_size = size
+        else:
+            self.min_size = self.max_size = size
+
+        self.kernel_bank = self.precompute_kernels(self.min_size, self.max_size)[0]
 
     def compute_output_shape(self, input_shape):
         """
@@ -20,7 +25,7 @@ class BlurLayer(tf.keras.layers.Layer):
         :param input_shape:
         :return:
         """
-        return None, 224, 224, 3
+        return (None,) + input_shape
 
     def build(self, input_shape):
         pass
@@ -36,15 +41,15 @@ class BlurLayer(tf.keras.layers.Layer):
 
         return coeffs
 
-    def precompute_kernels(self, min_amt=1, max_amt=32):
+    def precompute_kernels(self, min_size=1, max_size=32):
         path = 'test_coefficients.pkl'
 
         if os.path.isfile(path):
             coeffs = pickle.load(open(path, 'rb'))
         else:
-            coeffs = self.compute_coeffs(min_amt, max_amt)
+            coeffs = self.compute_coeffs(min_size, max_size)
         kernels = []
-        for size in range(min_amt, max_amt+1):
+        for size in range(min_size, max_size + 1):
             kernel = self.create_kernel_from_coeff(coeff=coeffs[size])
             # kernel = utilities.pad_to_width(kernel, width=self.max_amt)
             kernels.append(kernel)
@@ -131,32 +136,3 @@ class BlurLayer(tf.keras.layers.Layer):
         outputs = tf.nn.depthwise_conv2d(inputs, kernel, strides=[1, 1, 1, 1], padding="SAME")
 
         return outputs
-        # x, amt = inputs[0], inputs[1] #check for inputs etc
-        # x = inputs
-        # batch_size = tf.shape(x)[0]
-        # amt = tf.random.uniform((batch_size, 1), self.min_amt, self.max_amt, tf.int32)
-        #
-        # batch_size = tf.shape(x)[0]
-        # height = tf.shape(x)[1]
-        # width = tf.shape(x)[2]
-        #
-        # kernels = self.select_kernels(amt)
-        # angles = self.select_random_rotations(kernels)
-        #
-        # angles = tf.cast(angles, tf.float32)
-        # kernels = kernels[..., 0]
-        # kernels, _ = tf.map_fn(lambda x: (tf.contrib.image.rotate(x[0],
-        #                                                        tf.multiply(x[1], math.pi / 180),
-        #                                                        interpolation='Nearest'), x[1]),
-        #                     [kernels, angles],
-        #                     dtype=(tf.float64, tf.float32))
-        # kernels = kernels[..., None]
-        #
-        # kernels = self.reshape_kernel(kernels)
-        # x = self.reshape_input(x)
-        # kernels = tf.cast(kernels, tf.float32)
-        # out = tf.nn.depthwise_conv2d(x, filter=kernels, strides=[1, 1, 1, 1], padding='SAME')
-        # out = self.reshape_output(out, batch_size, height, width)
-        # out = tf.reshape(out, (-1, 224, 224, 3)) # make generic input shape
-        # return out
-
